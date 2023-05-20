@@ -1,4 +1,4 @@
-package com.example.projectsvt.Model.Enums;
+package com.example.projectsvt.model.Enums;
 
 public enum ReactionType {
     LIKE,

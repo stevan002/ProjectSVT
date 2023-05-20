@@ -1,11 +1,12 @@
-package com.example.projectsvt.Model;
+package com.example.projectsvt.model;
 
-import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 
 @Entity

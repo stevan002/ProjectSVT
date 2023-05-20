@@ -1,12 +1,13 @@
-package com.example.projectsvt.Model;
+package com.example.projectsvt.model;
 
-import com.example.projectsvt.Model.Enums.Role;
-import jakarta.persistence.*;
+import com.example.projectsvt.dto.user.CreateUserDto;
+import com.example.projectsvt.model.Enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
@@ -54,5 +55,14 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "fk_friend_id")
     private User friendsWith;
+
+    public User(CreateUserDto createUserDto) {
+        this.username = createUserDto.getUsername();
+        this.firstName = createUserDto.getFirstName();
+        this.lastName = createUserDto.getLastName();
+        this.email = createUserDto.getEmail();
+        this.role = createUserDto.getRole();
+    }
+
 
 }

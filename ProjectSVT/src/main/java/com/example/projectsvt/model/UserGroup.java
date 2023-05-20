@@ -1,4 +1,4 @@
-package com.example.projectsvt.Model;
+package com.example.projectsvt.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

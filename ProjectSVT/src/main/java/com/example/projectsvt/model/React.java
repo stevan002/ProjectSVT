@@ -1,6 +1,6 @@
-package com.example.projectsvt.Model;
+package com.example.projectsvt.model;
 
-import com.example.projectsvt.Model.Enums.ReactionType;
+import com.example.projectsvt.model.Enums.ReactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
