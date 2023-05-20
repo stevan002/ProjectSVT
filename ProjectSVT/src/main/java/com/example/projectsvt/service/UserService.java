@@ -1,6 +1,7 @@
 package com.example.projectsvt.service;
 
 import com.example.projectsvt.dto.user.CreateUserDto;
+import com.example.projectsvt.dto.user.PasswordChangeDto;
 import com.example.projectsvt.model.User;
 import com.example.projectsvt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,28 @@ public class UserService {
             return new ResponseEntity<>("User with given ID does not exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optionalUser.get(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> changePassword(PasswordChangeDto passwordChangeDto){
+        String newPassword = passwordChangeDto.getNewPassword();
+        if(newPassword.length() < 6){
+            return new ResponseEntity<>("New password must be at least 6 characters long", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<User> optionalUser = userRepository.findByUsername(passwordChangeDto.getUsername());
+        if(optionalUser.isEmpty()){
+            return new ResponseEntity<>("User with given username does not exist", HttpStatus.NOT_FOUND);
+        }
+
+        User user = optionalUser.get();
+        if(!passwordEncoder.matches(passwordChangeDto.getOldPassword(), user.getPassword())){
+            return new ResponseEntity<>("Old passwords do not match", HttpStatus.BAD_REQUEST);
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        return new ResponseEntity<>("Pasword successfully changed !", HttpStatus.OK);
     }
 
 

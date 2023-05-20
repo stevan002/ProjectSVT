@@ -1,6 +1,7 @@
 package com.example.projectsvt.controller;
 
 import com.example.projectsvt.dto.user.CreateUserDto;
+import com.example.projectsvt.dto.user.LoginUserDto;
 import com.example.projectsvt.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,11 @@ public class AuthController {
     @PostMapping(path = "/register", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@RequestBody CreateUserDto createUserDto){
         return authService.registerUser(createUserDto);
+    }
+
+    @PostMapping(path="/login", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> login(@RequestBody LoginUserDto loginUserDto){
+        return authService.login(loginUserDto);
     }
 
 

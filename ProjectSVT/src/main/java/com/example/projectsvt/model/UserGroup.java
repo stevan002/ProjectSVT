@@ -31,4 +31,10 @@ public class UserGroup {
     @ManyToOne
     @JoinColumn(name = "fk_group_id", nullable = false)
     private Group group;
+
+
+    public UserGroup(User user, Group group) {
+        this.user = user;
+        this.group = group;
+    }
 }
