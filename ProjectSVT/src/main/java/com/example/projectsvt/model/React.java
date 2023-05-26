@@ -1,7 +1,7 @@
 package com.example.projectsvt.model;
 
 import com.example.projectsvt.model.Enums.ReactionType;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

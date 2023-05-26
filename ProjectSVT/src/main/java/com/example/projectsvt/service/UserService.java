@@ -55,6 +55,12 @@ public class UserService {
         return new ResponseEntity<>("Pasword successfully changed !", HttpStatus.OK);
     }
 
-
+    public User findByUsername(String username) {
+        Optional<User> user = userRepository.findFirstByUsername(username);
+        if (!user.isEmpty()) {
+            return user.get();
+        }
+        return null;
+    }
 
 }
