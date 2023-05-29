@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +30,6 @@ public class PostService {
         if(createPostDto.getCreatedBy() == null){
             return new ResponseEntity<>("UserID must not be empty", HttpStatus.BAD_REQUEST);
         }
-        if(createPostDto.getContainedBy() == null){
-            return new ResponseEntity<>("GroupID must not be empty", HttpStatus.BAD_REQUEST);
-        }
 
         Post post = new Post();
 
@@ -41,13 +39,15 @@ public class PostService {
         }
         User user = (User) findByIdUserResponse.getBody();
         post.setCreatedBy(user);
-
-        ResponseEntity<?> findByIdGroupResponse = groupService.findById(createPostDto.getContainedBy());
-        if(findByIdGroupResponse.getStatusCode().equals(HttpStatus.NOT_FOUND)){
-            return findByIdGroupResponse;
+        if (createPostDto.getContainedBy() != null) {
+            ResponseEntity<?> findByIdGroupResponse = groupService.findById(createPostDto.getContainedBy());
+            Group group = (Group) findByIdGroupResponse.getBody();
+            post.setContainedBy(group);
         }
-        Group group = (Group) findByIdGroupResponse.getBody();
-        post.setContainedBy(group);
+
+        if (createPostDto.getImage() != null) {
+            post.setImage(createPostDto.getImage());
+        }
 
         post.setContent(createPostDto.getContent());
         post = postRepository.save(post);

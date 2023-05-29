@@ -29,11 +29,14 @@ public class Post {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "image_path")
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "fk_user_id", nullable = false)
     private User createdBy;
 
     @ManyToOne
-    @JoinColumn(name = "fk_group_id", nullable = false)
+    @JoinColumn(name = "fk_group_id")
     private Group containedBy;
 }

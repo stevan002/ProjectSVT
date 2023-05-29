@@ -73,6 +73,16 @@ public class WebSecurityConfig {
 //                .antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/change-password").permitAll()
+                .antMatchers(HttpMethod.POST, "/group/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/group/**").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/group/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/group/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/post/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/post/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/post/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/reaction/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/reaction/**").permitAll()
                 // ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
                 // koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
                 // samo korisnik koji ima rolu 'ADMIN', navodimo na sledeci nacin:
