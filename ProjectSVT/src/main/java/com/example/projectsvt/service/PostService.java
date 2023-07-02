@@ -70,32 +70,27 @@ public class PostService {
         return new ResponseEntity<>(postList, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> updatePost(Long id, UpdatePostDto updatePostDto){
-        if(updatePostDto.getContent() == null || updatePostDto.getContent().isEmpty()){
-            return new ResponseEntity<>("Content must not be empty", HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<?> updatePost(Long id, String content, User user){
+        Post post = findPostById(id);
+        if(post == null) {
 
-        Optional<Post> optionalPost = postRepository.findById(id);
-        if(optionalPost.isEmpty()) {
-            return new ResponseEntity<>("Post with given ID does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Post updated successfully", HttpStatus.NOT_FOUND);
         }
-
-        Post post = optionalPost.get();
-        post.setContent(updatePostDto.getContent());
+        post.setContent(content);
+        post.setCreatedBy(user);
         postRepository.save(post);
+
         return new ResponseEntity<>("Post updated successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> deletePost(Long id, Long userId){
+    public ResponseEntity<?> deletePost(Long id){
         Optional<Post> optionalPost = postRepository.findById(id);
         if(optionalPost.isEmpty()){
             return new ResponseEntity<>("Post with given ID does not exist", HttpStatus.NOT_FOUND);
         }
 
         Post post = optionalPost.get();
-        if(!post.getCreatedBy().getId().equals(userId)){
-            return new ResponseEntity<>("Given post was not posted by given user", HttpStatus.CONFLICT);
-        }
+
 
         postRepository.delete(post);
         return new ResponseEntity<>("Post successfully deleted !", HttpStatus.OK);

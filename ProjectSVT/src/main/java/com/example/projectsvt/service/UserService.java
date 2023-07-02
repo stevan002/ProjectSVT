@@ -39,23 +39,24 @@ public class UserService {
         return new ResponseEntity<>(optionalUser.get(), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> changePassword(PasswordChangeDto passwordChangeDto){
-        String newPassword = passwordChangeDto.getNewPassword();
-        if(newPassword.length() < 6){
+    public ResponseEntity<?> changePassword(PasswordChangeDto passwordChangeDto, User user){
+        if(passwordChangeDto.getNewPassword().length() < 6){
             return new ResponseEntity<>("New password must be at least 6 characters long", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<User> optionalUser = userRepository.findByUsername(passwordChangeDto.getUsername());
-        if(optionalUser.isEmpty()){
-            return new ResponseEntity<>("User with given username does not exist", HttpStatus.NOT_FOUND);
+        if(user == null){
+            return new ResponseEntity<>("Not found user !", HttpStatus.NOT_FOUND);
         }
 
-        User user = optionalUser.get();
-        if(!passwordEncoder.matches(passwordChangeDto.getOldPassword(), user.getPassword())){
-            return new ResponseEntity<>("Old passwords do not match", HttpStatus.BAD_REQUEST);
+        if(!passwordChangeDto.getNewPassword().equals(passwordChangeDto.getNewPassword1())){
+            return new ResponseEntity<>("New password must two time write same!", HttpStatus.BAD_REQUEST);
         }
 
-        user.setPassword(passwordEncoder.encode(newPassword));
+        if(!passwordChangeDto.getCurrentPassword().equals(user.getPassword())){
+            return new ResponseEntity<>("Old password not correct", HttpStatus.BAD_REQUEST);
+        }
+
+        user.setPassword(passwordEncoder.encode(passwordChangeDto.getNewPassword()));
         userRepository.save(user);
 
         return new ResponseEntity<>("Pasword successfully changed !", HttpStatus.OK);

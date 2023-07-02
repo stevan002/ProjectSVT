@@ -72,7 +72,7 @@ public class AuthController {
         }
         String username = authentication.getName();
         User user = userService.findByUsername(username);
-
+        user.setLastLogin(LocalDateTime.now());
         userService.update(user);
         String accessToken = tokenUtils.generateToken(userDetails);
         Date expiresIn = tokenUtils.getExpirationDateFromToken(accessToken);

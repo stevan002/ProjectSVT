@@ -1,5 +1,6 @@
 package com.example.projectsvt.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -22,8 +24,9 @@ public class Post {
     @SequenceGenerator(name = "postSequenceGenerator", sequenceName = "postSequence", allocationSize = 1)
     private Long id;
 
-    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT NOW()", nullable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy. hh:mm")
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     // Nema smisla da postoji ukoliko je content prazan
     @Column(name = "content", nullable = false)

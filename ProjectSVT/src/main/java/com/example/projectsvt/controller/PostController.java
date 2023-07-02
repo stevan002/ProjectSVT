@@ -29,11 +29,11 @@ public class PostController {
     private final UserService userService;
     private final CommentService commentService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> createPost(@RequestBody CreatePostDto createPostDto){
         User user = userService.getCurrentUser();
         ResponseEntity<?> post = postService.createPost(user, createPostDto);
-        return ResponseEntity.ok(post);
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/all"}, produces = APPLICATION_JSON_VALUE)
@@ -51,16 +51,18 @@ public class PostController {
         return postService.findPostsByUser(userId);
     }
 
-    @PutMapping(path = "/{id}", consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updatePost(@PathVariable("id") Long id,
-                                        @RequestBody UpdatePostDto updatePostDto) {
-        return postService.updatePost(id, updatePostDto);
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<?> updatePost(@PathVariable Long id,
+                                        @RequestBody String content) {
+        User user = userService.getCurrentUser();
+        postService.updatePost(id, content, user);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(path = "/{id}/{user-id}")
-    public ResponseEntity<?> deletePost(@PathVariable("id") Long id,
-                                        @PathVariable("user-id") Long userId) {
-        return postService.deletePost(id, userId);
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable("id") Long id) {
+        postService.deletePost(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{postId}/comments")
