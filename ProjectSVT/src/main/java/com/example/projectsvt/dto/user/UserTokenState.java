@@ -1,17 +1,19 @@
 package com.example.projectsvt.dto.user;
 
+import java.util.Date;
+
 // DTO koji enkapsulira generisani JWT i njegovo trajanje koji se vracaju klijentu
 public class UserTokenState {
 
     private String accessToken;
-    private Long expiresIn;
+    private Date expiresIn;
 
     public UserTokenState() {
         this.accessToken = null;
         this.expiresIn = null;
     }
 
-    public UserTokenState(String accessToken, long expiresIn) {
+    public UserTokenState(String accessToken, Date expiresIn) {
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
     }
@@ -24,11 +26,11 @@ public class UserTokenState {
         this.accessToken = accessToken;
     }
 
-    public Long getExpiresIn() {
+    public Date getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(Long expiresIn) {
+    public void setExpiresIn(Date expiresIn) {
         this.expiresIn = expiresIn;
     }
 

@@ -2,6 +2,7 @@ package com.example.projectsvt.service;
 
 import com.example.projectsvt.dto.user.CreateUserDto;
 import com.example.projectsvt.dto.user.LoginUserDto;
+import com.example.projectsvt.model.Enums.Role;
 import com.example.projectsvt.model.User;
 import com.example.projectsvt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,6 @@ public class AuthService {
         if (createUserDto.getLastName() == null || createUserDto.getLastName().isEmpty()) {
             return new ResponseEntity<>("Last name must not be empty",HttpStatus.BAD_REQUEST);
         }
-        if (createUserDto.getRole() == null) {
-            return new ResponseEntity<>("Role must not be empty",HttpStatus.BAD_REQUEST);
-        }
         if (createUserDto.getPassword().length() < 6) {
             return new ResponseEntity<>("Password must be at least 6 characters long",HttpStatus.BAD_REQUEST);
         }
@@ -47,6 +45,7 @@ public class AuthService {
         }
 
         User user = new User(createUserDto);
+        user.setRole(Role.USER);
         user.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
         user = userRepository.save(user);
 

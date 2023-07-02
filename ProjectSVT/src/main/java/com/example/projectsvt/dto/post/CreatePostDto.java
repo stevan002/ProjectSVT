@@ -13,8 +13,8 @@ public class CreatePostDto {
 
     private Long createdBy;
 
-    private Long containedBy;
+//    private Long containedBy;
 
-    private String image;
+//    private String image;
 
 }

@@ -20,5 +20,6 @@ public class CreateUserDto {
 
     private String lastName;
 
-    private Role role;
+    private String image;
+
 }

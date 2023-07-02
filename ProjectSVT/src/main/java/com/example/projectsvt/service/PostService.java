@@ -9,8 +9,10 @@ import com.example.projectsvt.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,31 +25,24 @@ public class PostService {
     private final GroupService groupService;
     private final UserService userService;
 
-    public ResponseEntity<?> createPost(CreatePostDto createPostDto) {
-        if(createPostDto.getContent() == null || createPostDto.getContent().isEmpty()){
+    public ResponseEntity<?> createPost(User user, CreatePostDto createPostDto) {
+        if(createPostDto.getContent() == null || createPostDto.getContent().isEmpty()) {
             return new ResponseEntity<>("Content must not be empty", HttpStatus.BAD_REQUEST);
-        }
-        if(createPostDto.getCreatedBy() == null){
-            return new ResponseEntity<>("UserID must not be empty", HttpStatus.BAD_REQUEST);
         }
 
         Post post = new Post();
 
-        ResponseEntity<?> findByIdUserResponse = userService.findById(createPostDto.getCreatedBy());
-        if(findByIdUserResponse.getStatusCode().equals(HttpStatus.NOT_FOUND)){
-            return findByIdUserResponse;
-        }
-        User user = (User) findByIdUserResponse.getBody();
         post.setCreatedBy(user);
-        if (createPostDto.getContainedBy() != null) {
-            ResponseEntity<?> findByIdGroupResponse = groupService.findById(createPostDto.getContainedBy());
-            Group group = (Group) findByIdGroupResponse.getBody();
-            post.setContainedBy(group);
-        }
 
-        if (createPostDto.getImage() != null) {
-            post.setImage(createPostDto.getImage());
-        }
+//        if (createPostDto.getContainedBy() != null) {
+//            ResponseEntity<?> findByIdGroupResponse = groupService.findById(createPostDto.getContainedBy());
+//            Group group = (Group) findByIdGroupResponse.getBody();
+//            post.setContainedBy(group);
+//        }
+
+//        if (createPostDto.getImage() != null) {
+//            post.setImage(createPostDto.getImage());
+//        }
 
         post.setContent(createPostDto.getContent());
         post = postRepository.save(post);
@@ -57,14 +52,8 @@ public class PostService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> findPostById(Long id) {
-        Optional<Post> optionalPost = postRepository.findById(id);
-
-        if(optionalPost.isEmpty()){
-            return new ResponseEntity<>("Post with given ID does not exist", HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
+    public Post findPostById(Long id) {
+        return postRepository.findById(id).orElse(null);
     }
 
     public ResponseEntity<?> findPostsByUser(Long userId){
@@ -111,5 +100,11 @@ public class PostService {
         postRepository.delete(post);
         return new ResponseEntity<>("Post successfully deleted !", HttpStatus.OK);
 
+    }
+
+    public ResponseEntity<?> getAll(){
+        List<Post> allPosts = new ArrayList<>();
+        allPosts = postRepository.findAll();
+        return new ResponseEntity<>(allPosts, HttpStatus.OK);
     }
 }

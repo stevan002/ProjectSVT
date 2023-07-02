@@ -48,6 +48,12 @@ public class User {
     @Column(name = "profile_image")
     private String profileImagePath;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "display_name")
+    private String displayName;
+
     @Column(name = "role", columnDefinition = "varchar(15) default 'USER'", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
@@ -61,7 +67,6 @@ public class User {
         this.firstName = createUserDto.getFirstName();
         this.lastName = createUserDto.getLastName();
         this.email = createUserDto.getEmail();
-        this.role = createUserDto.getRole();
     }
 
 
