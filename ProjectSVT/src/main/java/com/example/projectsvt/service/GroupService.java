@@ -3,6 +3,7 @@ package com.example.projectsvt.service;
 import com.example.projectsvt.dto.group.CreateGroupDto;
 import com.example.projectsvt.dto.group.UpdateGroupDto;
 import com.example.projectsvt.model.Group;
+import com.example.projectsvt.model.Post;
 import com.example.projectsvt.model.User;
 import com.example.projectsvt.model.UserGroup;
 import com.example.projectsvt.repository.GroupRepository;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,32 +28,23 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
 
-    public ResponseEntity<?> createGroup(CreateGroupDto createGroupDto){
+    public ResponseEntity<?> createGroup(CreateGroupDto createGroupDto, User user){
         if(createGroupDto.getName() == null || createGroupDto.getName().isEmpty()){
             return new ResponseEntity<>("Name must not be empty", HttpStatus.BAD_REQUEST);
-        }
-        if(createGroupDto.getCreatedBy() == null){
-            return new ResponseEntity<>("UserID must not be empty", HttpStatus.BAD_REQUEST);
         }
 
         Group group = new Group();
 
-        ResponseEntity<?> findByIdUserResponse = userService.findById(createGroupDto.getCreatedBy());
-        if(findByIdUserResponse.getStatusCode().equals(HttpStatus.NOT_FOUND)){
-            return findByIdUserResponse;
-        }
-
-        User user = (User) findByIdUserResponse.getBody();
         group.setCreatedBy(user);
         group.setName(createGroupDto.getName());
         group.setDescription(createGroupDto.getDescription());
+        group.setCreatedAt(LocalDateTime.now());
         group = groupRepository.save(group);
 
         UserGroup userGroup = new UserGroup(user, group);
         userGroupRepository.save(userGroup);
 
-        String response = String.format("Group saved successfully ! GroupID : %d", group.getId());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<?> findById(Long id){
@@ -94,19 +87,16 @@ public class GroupService {
         group.setDescription(updateGroupDto.getDescription());
         groupRepository.save(group);
 
-        return new ResponseEntity<>("Group updated successfully !", HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> deleteGroup(Long id, Long userId){
+    public ResponseEntity<?> deleteGroup(Long id){
         Optional<Group> optionalGroup = groupRepository.findById(id);
         if (optionalGroup.isEmpty()){
             return new ResponseEntity<>("Group with given ID does not exist", HttpStatus.NOT_FOUND);
         }
 
         Group group = optionalGroup.get();
-        if(!group.getCreatedBy().getId().equals(userId)){
-            return new ResponseEntity<>("Given group was not created by given user", HttpStatus.NOT_FOUND);
-        }
 
         List<UserGroup> userGroups = userGroupRepository.findByGroupId(id);
         for(UserGroup userGroup : userGroups){
@@ -114,7 +104,7 @@ public class GroupService {
         }
 
         groupRepository.delete(group);
-        return new ResponseEntity<>("Group successfully deleted !", HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<?> removeUserFromGroup(Long groupId, Long userId){
@@ -160,5 +150,11 @@ public class GroupService {
         userGroupRepository.save(userGroup);
 
         return new ResponseEntity<>("User successfully added to group !", HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getAll(){
+        List<Group> allGroups = new ArrayList<>();
+        allGroups = groupRepository.findAll();
+        return new ResponseEntity<>(allGroups, HttpStatus.OK);
     }
 }

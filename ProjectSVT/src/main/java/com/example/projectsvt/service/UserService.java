@@ -52,14 +52,14 @@ public class UserService {
             return new ResponseEntity<>("New password must two time write same!", HttpStatus.BAD_REQUEST);
         }
 
-        if(!passwordChangeDto.getCurrentPassword().equals(user.getPassword())){
+        if(!passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), user.getPassword())){
             return new ResponseEntity<>("Old password not correct", HttpStatus.BAD_REQUEST);
         }
 
         user.setPassword(passwordEncoder.encode(passwordChangeDto.getNewPassword()));
         userRepository.save(user);
 
-        return new ResponseEntity<>("Pasword successfully changed !", HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     public User findByUsername(String username) {

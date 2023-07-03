@@ -34,11 +34,11 @@ public class PostService {
 
         post.setCreatedBy(user);
 
-//        if (createPostDto.getContainedBy() != null) {
-//            ResponseEntity<?> findByIdGroupResponse = groupService.findById(createPostDto.getContainedBy());
-//            Group group = (Group) findByIdGroupResponse.getBody();
-//            post.setContainedBy(group);
-//        }
+        if (createPostDto.getContainedBy() != null) {
+            ResponseEntity<?> findByIdGroupResponse = groupService.findById(createPostDto.getContainedBy());
+            Group group = (Group) findByIdGroupResponse.getBody();
+            post.setContainedBy(group);
+        }
 
 //        if (createPostDto.getImage() != null) {
 //            post.setImage(createPostDto.getImage());
