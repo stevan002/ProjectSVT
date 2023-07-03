@@ -1,5 +1,6 @@
 package com.example.projectsvt.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -22,8 +24,9 @@ public class Comment {
     @SequenceGenerator(name = "commentSequenceGenerator", sequenceName = "commentSequence", allocationSize = 1)
     private Long id;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy. hh:mm")
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT NOW()", nullable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     // Ukoliko je komentar prazan, nema smisla da postoji
     @Column(name = "text", nullable = false)

@@ -15,6 +15,6 @@ public class CreatePostDto {
 
     private Long containedBy;
 
-//    private String image;
+
 
 }

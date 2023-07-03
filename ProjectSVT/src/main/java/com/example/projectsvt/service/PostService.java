@@ -2,9 +2,11 @@ package com.example.projectsvt.service;
 
 import com.example.projectsvt.dto.post.CreatePostDto;
 import com.example.projectsvt.dto.post.UpdatePostDto;
+import com.example.projectsvt.model.Comment;
 import com.example.projectsvt.model.Group;
 import com.example.projectsvt.model.Post;
 import com.example.projectsvt.model.User;
+import com.example.projectsvt.repository.CommentRepository;
 import com.example.projectsvt.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final GroupService groupService;
     private final UserService userService;
+    private final CommentRepository commentRepository;
 
     public ResponseEntity<?> createPost(User user, CreatePostDto createPostDto) {
         if(createPostDto.getContent() == null || createPostDto.getContent().isEmpty()) {
@@ -70,6 +73,10 @@ public class PostService {
         return new ResponseEntity<>(postList, HttpStatus.OK);
     }
 
+    public List<Post> findPostsByGroupId(Long groupId){
+        return postRepository.findByContainedById(groupId);
+    }
+
     public ResponseEntity<?> updatePost(Long id, String content, User user){
         Post post = findPostById(id);
         if(post == null) {
@@ -90,6 +97,11 @@ public class PostService {
         }
 
         Post post = optionalPost.get();
+
+        List<Comment> comments = (List<Comment>) commentRepository.findCommentsByBelongsToId(id);
+        for(Comment comment: comments){
+            commentRepository.delete(comment);
+        }
 
 
         postRepository.delete(post);

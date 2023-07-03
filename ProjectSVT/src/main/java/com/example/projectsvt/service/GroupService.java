@@ -7,6 +7,7 @@ import com.example.projectsvt.model.Post;
 import com.example.projectsvt.model.User;
 import com.example.projectsvt.model.UserGroup;
 import com.example.projectsvt.repository.GroupRepository;
+import com.example.projectsvt.repository.PostRepository;
 import com.example.projectsvt.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -27,6 +28,7 @@ public class GroupService {
     private final UserService userService;
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
+    private final PostRepository postRepository;
 
     public ResponseEntity<?> createGroup(CreateGroupDto createGroupDto, User user){
         if(createGroupDto.getName() == null || createGroupDto.getName().isEmpty()){
@@ -101,6 +103,11 @@ public class GroupService {
         List<UserGroup> userGroups = userGroupRepository.findByGroupId(id);
         for(UserGroup userGroup : userGroups){
             removeUserFromGroup(userGroup.getGroup().getId(), userGroup.getUser().getId());
+        }
+
+        List<Post> posts = (List<Post>) postRepository.findByContainedById(id);
+        for(Post post: posts){
+            postRepository.delete(post);
         }
 
         groupRepository.delete(group);

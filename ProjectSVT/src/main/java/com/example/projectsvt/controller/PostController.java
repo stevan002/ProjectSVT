@@ -27,7 +27,6 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
-    private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody CreatePostDto createPostDto){
@@ -64,33 +63,4 @@ public class PostController {
         postService.deletePost(id);
         return ResponseEntity.ok().build();
     }
-
-    @PostMapping("/{postId}/comments")
-    public ResponseEntity<Comment> addCommentToPost(@PathVariable Long postId, @RequestBody Comment comment){
-        User user = userService.getCurrentUser();
-        Comment newComment = commentService.addCommentToPost(postId, comment, user);
-        return new ResponseEntity<>(newComment, HttpStatus.OK);
-    }
-
-    @GetMapping("/{postId}/comments")
-    public ResponseEntity<List<Comment>> findCommentsForPost(@PathVariable Long postId){
-        List<Comment> comments = commentService.findCommentsForPost(postId);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
-    }
-
-    @PutMapping("/comments/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long commentId, @RequestBody Comment updatedComment){
-        Comment comment = commentService.updateComment(commentId, updatedComment);
-        if(comment == null){
-            return ResponseEntity.notFound().build();
-        }
-        return new ResponseEntity<>(comment, HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
-        return commentService.deleteComment(commentId);
-    }
-
-
 }

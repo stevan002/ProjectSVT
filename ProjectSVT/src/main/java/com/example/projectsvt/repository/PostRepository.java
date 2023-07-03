@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByCreatedBy(Long userId);
+    List<Post> findByContainedById(Long groupId);
 }

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +41,7 @@ public class CommentService {
     public Comment updateComment(Long id, Comment updateComment){
         Comment comment = findCommentById(id);
         comment.setText(updateComment.getText());
-        comment.setCreatedAt(OffsetDateTime.now());
+        comment.setCreatedAt(LocalDateTime.now());
         return commentRepository.save(comment);
     }
 
