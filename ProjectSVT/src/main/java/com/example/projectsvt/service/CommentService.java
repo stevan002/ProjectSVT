@@ -50,8 +50,8 @@ public class CommentService {
         if(comment != null){
             comment.setDeleted(true);
             commentRepository.save(comment);
-            return new ResponseEntity<>("Comment deleted!", HttpStatus.OK);
+            return ResponseEntity.ok().build();
         }
-        return new ResponseEntity<>("Comment with given Id doesn't exist", HttpStatus.NOT_FOUND);
+        return ResponseEntity.notFound().build();
     }
 }

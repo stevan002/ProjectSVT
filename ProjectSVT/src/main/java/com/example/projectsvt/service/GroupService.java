@@ -2,10 +2,8 @@ package com.example.projectsvt.service;
 
 import com.example.projectsvt.dto.group.CreateGroupDto;
 import com.example.projectsvt.dto.group.UpdateGroupDto;
-import com.example.projectsvt.model.Group;
-import com.example.projectsvt.model.Post;
-import com.example.projectsvt.model.User;
-import com.example.projectsvt.model.UserGroup;
+import com.example.projectsvt.model.*;
+import com.example.projectsvt.repository.CommentRepository;
 import com.example.projectsvt.repository.GroupRepository;
 import com.example.projectsvt.repository.PostRepository;
 import com.example.projectsvt.repository.UserGroupRepository;
@@ -29,6 +27,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     public ResponseEntity<?> createGroup(CreateGroupDto createGroupDto, User user){
         if(createGroupDto.getName() == null || createGroupDto.getName().isEmpty()){
@@ -103,6 +102,11 @@ public class GroupService {
         List<UserGroup> userGroups = userGroupRepository.findByGroupId(id);
         for(UserGroup userGroup : userGroups){
             removeUserFromGroup(userGroup.getGroup().getId(), userGroup.getUser().getId());
+        }
+
+        List<Comment> comments = (List<Comment>) commentRepository.findCommentsByBelongsToId(id);
+        for(Comment comment: comments){
+            commentRepository.delete(comment);
         }
 
         List<Post> posts = (List<Post>) postRepository.findByContainedById(id);
