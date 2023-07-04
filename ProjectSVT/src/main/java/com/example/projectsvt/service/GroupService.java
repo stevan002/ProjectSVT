@@ -104,9 +104,12 @@ public class GroupService {
             removeUserFromGroup(userGroup.getGroup().getId(), userGroup.getUser().getId());
         }
 
-        List<Comment> comments = (List<Comment>) commentRepository.findCommentsByBelongsToId(id);
-        for(Comment comment: comments){
-            commentRepository.delete(comment);
+        Post findPost = postRepository.findPostByContainedById(id);
+        if(findPost != null){
+            List<Comment> comments = (List<Comment>) commentRepository.findCommentsByBelongsToId(findPost.getId());
+            for(Comment comment: comments){
+                commentRepository.delete(comment);
+            }
         }
 
         List<Post> posts = (List<Post>) postRepository.findByContainedById(id);
