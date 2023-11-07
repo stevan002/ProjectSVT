@@ -9,7 +9,6 @@ import lombok.Setter;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 @Entity
 @Getter
